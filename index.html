@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GreenGuide AI</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <section class="hero">
+      <p class="badge">Carbon Footprint Awareness Assistant</p>
+      <h1>GreenGuide AI</h1>
+      <p class="subtitle">
+        A smart assistant that helps users understand daily habits and choose greener actions.
+      </p>
+    </section>
+
+    <section class="card">
+      <div id="chatBox" class="chat-box">
+        <div class="message bot">
+          <strong>GreenGuide AI:</strong>
+          Hi! Tell me about one daily activity like travel, electricity, food, or plastic use.
+        </div>
+      </div>
+
+      <form id="chatForm" class="input-area">
+        <input
+          id="userInput"
+          type="text"
+          placeholder="Example: I travel 5 km by bike every day"
+          autocomplete="off"
+          required
+        />
+        <button type="submit">Ask</button>
+      </form>
+
+      <div class="quick-actions">
+        <button data-prompt="I travel by car for short distances">Travel</button>
+        <button data-prompt="I leave lights and fan on sometimes">Energy</button>
+        <button data-prompt="I use plastic bottles daily">Plastic</button>
+        <button data-prompt="I waste food sometimes">Food</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
