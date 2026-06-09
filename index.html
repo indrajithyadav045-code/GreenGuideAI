@@ -3,44 +3,54 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GreenGuide AI</title>
+  <title>GreenGuide AI 2.0</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="app">
+  <main class="container">
     <section class="hero">
       <p class="badge">Carbon Footprint Awareness Assistant</p>
-      <h1>GreenGuide AI</h1>
-      <p class="subtitle">
-        A smart assistant that helps users understand daily habits and choose greener actions.
-      </p>
+      <h1>GreenGuide AI 2.0</h1>
+      <p>Smart assistant for eco score, daily actions, and greener habits.</p>
     </section>
 
-    <section class="card">
+    <section class="dashboard">
+      <div class="score-card">
+        <h2>Your Eco Score</h2>
+        <div id="scoreCircle">0</div>
+        <p id="scoreText">Start by adding an activity.</p>
+      </div>
+
+      <div class="report-card">
+        <h2>Smart Report</h2>
+        <p id="reportText">Your personalized carbon awareness report will appear here.</p>
+      </div>
+    </section>
+
+    <section class="chat-card">
       <div id="chatBox" class="chat-box">
         <div class="message bot">
-          <strong>GreenGuide AI:</strong>
-          Hi! Tell me about one daily activity like travel, electricity, food, or plastic use.
+          <b>GreenGuide AI:</b> Tell me one daily activity. Example: “I travel 5 km by bike.”
         </div>
       </div>
 
-      <form id="chatForm" class="input-area">
-        <input
-          id="userInput"
-          type="text"
-          placeholder="Example: I travel 5 km by bike every day"
-          autocomplete="off"
-          required
-        />
-        <button type="submit">Ask</button>
+      <form id="chatForm">
+        <input id="userInput" placeholder="Enter your activity..." required />
+        <button type="submit">Analyze</button>
       </form>
 
-      <div class="quick-actions">
-        <button data-prompt="I travel by car for short distances">Travel</button>
-        <button data-prompt="I leave lights and fan on sometimes">Energy</button>
-        <button data-prompt="I use plastic bottles daily">Plastic</button>
-        <button data-prompt="I waste food sometimes">Food</button>
+      <div class="quick-buttons">
+        <button data-text="I travel by car for short distances">Travel</button>
+        <button data-text="I leave lights and fan on">Energy</button>
+        <button data-text="I use plastic bottles daily">Plastic</button>
+        <button data-text="I waste food sometimes">Food</button>
       </div>
+    </section>
+
+    <section class="history-card">
+      <h2>Activity History</h2>
+      <ul id="historyList"></ul>
+      <button id="clearBtn">Clear History</button>
     </section>
   </main>
 
