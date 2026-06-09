@@ -1,90 +1,169 @@
 const chatBox = document.getElementById("chatBox");
 const chatForm = document.getElementById("chatForm");
 const userInput = document.getElementById("userInput");
-const quickButtons = document.querySelectorAll(".quick-actions button");
+const scoreCircle = document.getElementById("scoreCircle");
+const scoreText = document.getElementById("scoreText");
+const reportText = document.getElementById("reportText");
+const historyList = document.getElementById("historyList");
+const clearBtn = document.getElementById("clearBtn");
+const quickButtons = document.querySelectorAll(".quick-buttons button");
 
-const knowledgeBase = [
+let totalScore = Number(localStorage.getItem("ecoScore")) || 0;
+let activityCount = Number(localStorage.getItem("activityCount")) || 0;
+let history = JSON.parse(localStorage.getItem("history")) || [];
+
+const rules = [
   {
-    keywords: ["car", "bike", "scooter", "travel", "drive", "vehicle", "petrol", "diesel"],
-    score: "Medium to High",
-    reply:
-      "Your travel habit can increase your carbon footprint, especially for short distances. Try walking, cycling, carpooling, or using public transport when possible."
+    keywords: ["car", "bike", "scooter", "petrol", "diesel", "vehicle"],
+    impact: 25,
+    category: "Travel",
+    tip: "Try walking, cycling, carpooling, or public transport for short distances."
   },
   {
-    keywords: ["light", "fan", "ac", "electricity", "power", "charge", "energy"],
-    score: "Medium",
-    reply:
-      "Energy usage matters. Switch off lights, fans, chargers, and AC when not needed. Use natural light and energy-efficient appliances."
+    keywords: ["light", "fan", "ac", "electricity", "charger", "power"],
+    impact: 20,
+    category: "Energy",
+    tip: "Switch off unused lights, fans, chargers, and use natural light when possible."
   },
   {
-    keywords: ["plastic", "bottle", "bag", "wrapper", "single use"],
-    score: "Medium",
-    reply:
-      "Single-use plastic creates long-term waste. Carry a reusable bottle, cloth bag, and avoid unnecessary packaging."
+    keywords: ["plastic", "bottle", "bag", "wrapper"],
+    impact: 18,
+    category: "Plastic",
+    tip: "Use cloth bags, reusable bottles, and avoid single-use plastic."
   },
   {
-    keywords: ["food", "waste", "meat", "leftover", "throw"],
-    score: "Medium",
-    reply:
-      "Food waste adds to emissions. Plan meals, store leftovers safely, and avoid wasting cooked food."
+    keywords: ["food", "waste", "leftover", "throw"],
+    impact: 16,
+    category: "Food",
+    tip: "Plan meals, save leftovers, and avoid wasting cooked food."
   },
   {
-    keywords: ["tree", "plant", "garden", "green"],
-    score: "Positive",
-    reply:
-      "Great habit! Planting trees and protecting green spaces helps absorb carbon and improves local air quality."
+    keywords: ["tree", "plant", "green", "garden"],
+    impact: -15,
+    category: "Positive Action",
+    tip: "Great! Continue planting and protecting green spaces."
   }
 ];
 
 function addMessage(text, type) {
-  const message = document.createElement("div");
-  message.className = `message ${type}`;
-  message.innerHTML = text;
-  chatBox.appendChild(message);
+  const div = document.createElement("div");
+  div.className = `message ${type}`;
+  div.innerHTML = text;
+  chatBox.appendChild(div);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-function analyzeInput(input) {
-  const lowerInput = input.toLowerCase();
+function analyzeActivity(input) {
+  const lower = input.toLowerCase();
 
-  const matched = knowledgeBase.find(item =>
-    item.keywords.some(keyword => lowerInput.includes(keyword))
+  const matchedRule = rules.find(rule =>
+    rule.keywords.some(keyword => lower.includes(keyword))
   );
 
-  if (matched) {
-    return `
-      <strong>GreenGuide AI:</strong><br>
-      <b>Carbon Impact:</b> ${matched.score}<br><br>
-      ${matched.reply}<br><br>
-      <b>Daily Goal:</b> Choose one greener action today and repeat it for 7 days.
-    `;
+  if (!matchedRule) {
+    return {
+      category: "General Habit",
+      impact: 12,
+      tip: "Reduce waste, save energy, reuse items, and make one greener choice today."
+    };
   }
 
-  return `
-    <strong>GreenGuide AI:</strong><br>
-    I understand your activity. To reduce your carbon footprint, try saving energy,
-    reducing waste, reusing items, and choosing eco-friendly alternatives whenever possible.<br><br>
-    <b>Daily Goal:</b> Make one small sustainable choice today.
-  `;
+  return matchedRule;
 }
 
-chatForm.addEventListener("submit", (event) => {
-  event.preventDefault();
+function getEcoLevel(score) {
+  if (score <= 20) return "Eco Hero 🌱";
+  if (score <= 45) return "Good Progress ✅";
+  if (score <= 70) return "Needs Improvement ⚠️";
+  return "High Carbon Impact 🚨";
+}
+
+function updateDashboard() {
+  let average = activityCount === 0 ? 0 : Math.round(totalScore / activityCount);
+  scoreCircle.textContent = average;
+
+  const level = getEcoLevel(average);
+  scoreText.textContent = level;
+
+  reportText.innerHTML = `
+    <b>Activities Analyzed:</b> ${activityCount}<br>
+    <b>Average Carbon Impact:</b> ${average}/100<br>
+    <b>Status:</b> ${level}<br><br>
+    <b>Suggestion:</b> Choose one greener habit and repeat it daily.
+  `;
+
+  historyList.innerHTML = "";
+
+  history.forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = `${item.activity} → ${item.category} | Impact: ${item.impact}`;
+    historyList.appendChild(li);
+  });
+}
+
+function saveData() {
+  localStorage.setItem("ecoScore", totalScore);
+  localStorage.setItem("activityCount", activityCount);
+  localStorage.setItem("history", JSON.stringify(history));
+}
+
+chatForm.addEventListener("submit", function (e) {
+  e.preventDefault();
 
   const input = userInput.value.trim();
   if (!input) return;
 
-  addMessage(`<strong>You:</strong> ${input}`, "user");
+  addMessage(`<b>You:</b> ${input}`, "user");
 
-  const response = analyzeInput(input);
-  setTimeout(() => addMessage(response, "bot"), 400);
+  const result = analyzeActivity(input);
+
+  totalScore += result.impact;
+  activityCount++;
+
+  history.unshift({
+    activity: input,
+    category: result.category,
+    impact: result.impact
+  });
+
+  if (history.length > 6) {
+    history.pop();
+  }
+
+  saveData();
+  updateDashboard();
+
+  const response = `
+    <b>GreenGuide AI:</b><br>
+    <b>Detected Category:</b> ${result.category}<br>
+    <b>Carbon Impact:</b> ${result.impact}/100<br><br>
+    <b>Personalized Tip:</b> ${result.tip}<br><br>
+    <b>Daily Challenge:</b> Try one eco-friendly action today.
+  `;
+
+  setTimeout(() => addMessage(response, "bot"), 350);
 
   userInput.value = "";
 });
 
 quickButtons.forEach(button => {
   button.addEventListener("click", () => {
-    userInput.value = button.dataset.prompt;
+    userInput.value = button.dataset.text;
     chatForm.dispatchEvent(new Event("submit"));
   });
 });
+
+clearBtn.addEventListener("click", () => {
+  totalScore = 0;
+  activityCount = 0;
+  history = [];
+  saveData();
+  updateDashboard();
+  chatBox.innerHTML = `
+    <div class="message bot">
+      <b>GreenGuide AI:</b> History cleared. Start again with a new activity.
+    </div>
+  `;
+});
+
+updateDashboard();
