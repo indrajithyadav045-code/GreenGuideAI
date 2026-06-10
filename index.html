@@ -3,54 +3,113 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GreenGuide AI 2.0</title>
+  <title>GreenGuide AI 3.0</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main class="container">
+    <nav class="topbar">
+      <div class="logo">🌍 GreenGuide AI</div>
+      <button id="themeToggle">🌙 Theme</button>
+    </nav>
+
     <section class="hero">
-      <p class="badge">Carbon Footprint Awareness Assistant</p>
-      <h1>GreenGuide AI 2.0</h1>
-      <p>Smart assistant for eco score, daily actions, and greener habits.</p>
+      <div class="badge">Carbon Footprint Awareness Assistant</div>
+      <h1>Build Greener Habits Daily</h1>
+      <p>
+        Analyze your daily activities, track your eco score, complete green goals,
+        and get personalized sustainability suggestions.
+      </p>
     </section>
 
-    <section class="dashboard">
-      <div class="score-card">
-        <h2>Your Eco Score</h2>
-        <div id="scoreCircle">0</div>
+    <section class="stats-grid">
+      <div class="stat-card">
+        <h3>Eco Score</h3>
+        <div class="score-ring">
+          <span id="scoreCircle">0</span>
+          <small>/100</small>
+        </div>
+        <div class="progress"><div id="progressFill"></div></div>
         <p id="scoreText">Start by adding an activity.</p>
       </div>
 
-      <div class="report-card">
-        <h2>Smart Report</h2>
-        <p id="reportText">Your personalized carbon awareness report will appear here.</p>
+      <div class="stat-card">
+        <h3>Green Streak</h3>
+        <div class="big-number" id="streakCount">0</div>
+        <p>eco actions completed</p>
+        <div id="badgeBox" class="achievement">🌱 Eco Starter</div>
+      </div>
+
+      <div class="stat-card">
+        <h3>Smart Report</h3>
+        <p id="reportText">
+          Your personalized carbon awareness report will appear here.
+        </p>
+        <button id="shareBtn">Copy Share Report</button>
       </div>
     </section>
 
-    <section class="chat-card">
-      <div id="chatBox" class="chat-box">
-        <div class="message bot">
-          <b>GreenGuide AI:</b> Tell me one daily activity. Example: “I travel 5 km by bike.”
+    <section class="main-grid">
+      <section class="panel chat-panel">
+        <div class="section-title">
+          <h2>AI Assistant</h2>
+          <span>Personalized habit analysis</span>
         </div>
-      </div>
 
-      <form id="chatForm">
-        <input id="userInput" placeholder="Enter your activity..." required />
-        <button type="submit">Analyze</button>
-      </form>
+        <div id="chatBox" class="chat-box">
+          <div class="message bot">
+            <b>GreenGuide AI:</b> Tell me one daily activity. Example:
+            “I travel 5 km by bike.”
+          </div>
+        </div>
 
-      <div class="quick-buttons">
-        <button data-text="I travel by car for short distances">Travel</button>
-        <button data-text="I leave lights and fan on">Energy</button>
-        <button data-text="I use plastic bottles daily">Plastic</button>
-        <button data-text="I waste food sometimes">Food</button>
-      </div>
+        <form id="chatForm">
+          <input id="userInput" placeholder="Type your daily habit..." required />
+          <button type="submit">Analyze</button>
+        </form>
+
+        <div class="quick-buttons">
+          <button data-text="I travel by car for short distances">🚗 Travel</button>
+          <button data-text="I leave lights and fan on">💡 Energy</button>
+          <button data-text="I use plastic bottles daily">🥤 Plastic</button>
+          <button data-text="I waste food sometimes">🍱 Food</button>
+          <button data-text="I plant trees and protect green spaces">🌱 Green Action</button>
+          <button data-text="I use public transport instead of private vehicle">🚌 Public Transport</button>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="section-title">
+          <h2>Daily Eco Checklist</h2>
+          <span>Complete goals</span>
+        </div>
+
+        <div class="checklist">
+          <label><input type="checkbox" class="ecoCheck" /> Switch off unused lights</label>
+          <label><input type="checkbox" class="ecoCheck" /> Use reusable bottle</label>
+          <label><input type="checkbox" class="ecoCheck" /> Avoid food waste</label>
+          <label><input type="checkbox" class="ecoCheck" /> Walk or use public transport</label>
+          <label><input type="checkbox" class="ecoCheck" /> Avoid single-use plastic</label>
+        </div>
+
+        <button id="completeGoalsBtn">Update Goals</button>
+
+        <div class="action-plan">
+          <h3>Personalized Action Plan</h3>
+          <ul id="actionPlanList">
+            <li>Add an activity to get your action plan.</li>
+          </ul>
+        </div>
+      </aside>
     </section>
 
-    <section class="history-card">
-      <h2>Activity History</h2>
+    <section class="panel history-card">
+      <div class="section-title">
+        <h2>Activity History</h2>
+        <span>Last 8 analyzed habits</span>
+      </div>
       <ul id="historyList"></ul>
-      <button id="clearBtn">Clear History</button>
+      <button id="clearBtn">Clear All Data</button>
     </section>
   </main>
 
